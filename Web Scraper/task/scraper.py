@@ -8,7 +8,7 @@ def save_articles(pages, article_type):
     # Base URL of the webpage to scrape
     base_url = "https://www.nature.com/nature/articles?sort=PubDate&year=2020&page="
 
-    # Loop over each page
+    # Loop over each pag
     for page in range(1, pages + 1):
         page_directory = f"Page_{page}"
         os.makedirs(page_directory, exist_ok=True)
