@@ -22,7 +22,7 @@ def check_length(word):
 
 
 print("Learning progress tracker")
-students = []
+students_id = []
 while True:
     new_students = []
     user_input = input()
@@ -31,6 +31,14 @@ while True:
         break
     elif user_input == 'back':
         print("Enter 'exit' to exit the program")
+    elif user_input == "list":
+        print("Students:")
+        if len(students_id) > 0:
+            for ids in students_id:
+                print(ids)
+        else:
+            print("No students found")
+
     elif user_input.strip() == "":
         print("No input.")
     elif user_input == "add students":
@@ -60,8 +68,15 @@ while True:
                     print("Incorrect email")
                     errors_found = True
                 if not errors_found:
-                    student = {'first_name': first_name, 'last_name': last_name, 'email': email}
-                    new_students.append(student)
-                    print("The student has been added.")
+                    for st in new_students:
+                        if email == st['email']:
+                            print("This email is already taken.")
+                            break
+                    else:
+                        student = {'first_name': first_name, 'last_name': last_name, 'email': email}
+                        student_id = (first_name + last_name + email).__hash__()
+                        students_id.append(student_id)
+                        new_students.append(student)
+                        print("The student has been added.")
     else:
         print("Error: unknown command!")
