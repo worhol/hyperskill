@@ -23,6 +23,8 @@ def check_length(word):
 
 print("Learning progress tracker")
 students_id = []
+# student_points = {}
+all_students = []
 while True:
     new_students = []
     user_input = input()
@@ -38,6 +40,79 @@ while True:
                 print(ids)
         else:
             print("No students found")
+    elif user_input == "add points":
+        print("Enter an id and points or 'back' to return")
+        while True:
+            points_input = input()
+            if points_input == "back":
+                break
+            points_input_parts = points_input.split()
+            if len(points_input_parts) == 5:
+                st_id = 0
+                python = 0
+                dsa = 0
+                databases = 0
+                flask = 0
+                if points_input_parts[0].isdigit():
+                    st_id = int(points_input_parts[0])
+                else:
+                    print("Incorrect points format")
+                if points_input_parts[1].isdigit():
+                    python = int(points_input_parts[1])
+                else:
+                    print("Incorrect points format")
+                if points_input_parts[2].isdigit():
+                    dsa = int(points_input_parts[2])
+                else:
+                    print("Incorrect points format")
+                if points_input_parts[3].isdigit():
+                    databases = int(points_input_parts[3])
+                else:
+                    print("Incorrect points format")
+                if points_input_parts[4].isdigit():
+                    flask = int(points_input_parts[4])
+                else:
+                    print("Incorrect points format")
+                if st_id not in students_id:
+                    print(f"No student is found for id={points_input_parts[0]}")
+                elif len(points_input_parts) != 5 or python < 0 or dsa < 0 or databases < 0 or flask < 0:
+                    print("Incorrect points format")
+                else:
+                    student_found = False
+                    for student in all_students:
+                        if student['student id'] == st_id:
+                            student['Python'] += python
+                            student['DSA'] += dsa
+                            student['Databases'] += databases
+                            student['Flask'] += flask
+                            student_found = True
+                            break
+
+                    if not student_found:
+                        student_points = {'student id': st_id, 'Python': python, 'DSA': dsa, "Databases": databases,
+                                          'Flask': flask}
+
+                        all_students.append(student_points)
+                        print("Points updated")
+            else:
+                print("Incorrect points format")
+    elif user_input == "find":
+        print("Enter an id or 'back' to return:")
+        while True:
+            find_input = input()
+            if find_input == "back":
+                break
+            if find_input.isdigit():
+                find_id = int(find_input)
+                for s in all_students:
+                    if s['student id'] == find_id:
+                        print(
+                            f"{s['student id']} points: Python={s['Python']}; DSA={s['DSA']}; Databases={s['Databases']}; "
+                            f"Flask={s['Flask']}")
+                else:
+                    print(f"No student is found for id={find_input}.")
+            else:
+                print(f"No student is found for id={find_input}.")
 
     elif user_input.strip() == "":
         print("No input.")
@@ -75,7 +150,7 @@ while True:
                     else:
                         student = {'first_name': first_name, 'last_name': last_name, 'email': email}
                         student_id = (first_name + last_name + email).__hash__()
-                        students_id.append(student_id)
+                        students_id.append(abs(student_id))
                         new_students.append(student)
                         print("The student has been added.")
     else:
