@@ -21,9 +21,48 @@ def check_length(word):
     return len(word) > 1
 
 
+def statistics():
+    most_popular = "n/a"
+    least_popular = "n/a"
+    highest_activity = "n/a"
+    lowest_activity = "n/a"
+    easiest_course = "n/a"
+    hardest_course = "n/a"
+
+    print("Most popular:", most_popular)
+    print("Least popular:", least_popular)
+    print("Highest activity:", highest_activity)
+    print("Lowest activity:", lowest_activity)
+    print("Easiest course:", easiest_course)
+    print("Hardest course:", hardest_course)
+
+    while True:
+        course_input = input()
+        if course_input == "back":
+            break
+        if course_input in course_counter().keys():
+            print(f"{course_input}")
+            print(f"id{'':<10}points{'':<5}completed")
+            for stu in all_students:
+                if stu[course_input] > 0:
+                    print(
+                        f"{stu['student id']}{'':<7}{stu[course_input]}{'':<9}{round((stu[course_input] / 600) * 100, 1)}%")
+
+
+def course_counter():
+    python_enrollment = sum((lambda students: 1 if student['Python'] > 0 else 0)(student) for student in all_students)
+    dsa_enrollment = sum((lambda students: 1 if student['DSA'] > 0 else 0)(student) for student in all_students)
+    databases_enrollment = sum(
+        (lambda students: 1 if student['Databases'] > 0 else 0)(student) for student in all_students)
+    flask_enrollment = sum((lambda students: 1 if student['Flask'] > 0 else 0)(student) for student in all_students)
+
+    courses = {'Python': python_enrollment, 'DSA': dsa_enrollment, 'Databases': databases_enrollment,
+               'Flask': flask_enrollment}
+    return courses
+
+
 print("Learning progress tracker")
 students_id = []
-# student_points = {}
 all_students = []
 while True:
     new_students = []
@@ -85,6 +124,7 @@ while True:
                             student['DSA'] += dsa
                             student['Databases'] += databases
                             student['Flask'] += flask
+                            print("Points updated")
                             student_found = True
                             break
 
@@ -96,6 +136,9 @@ while True:
                         print("Points updated")
             else:
                 print("Incorrect points format")
+    elif user_input == "statistics":
+        print("Type the name of a course to see details or 'back' to quit")
+        statistics()
     elif user_input == "find":
         print("Enter an id or 'back' to return:")
         while True:
@@ -149,7 +192,7 @@ while True:
                             break
                     else:
                         student = {'first_name': first_name, 'last_name': last_name, 'email': email}
-                        student_id = (first_name + last_name + email).__hash__()
+                        student_id = (first_name + last_name + email).__hash__() % 100000
                         students_id.append(abs(student_id))
                         new_students.append(student)
                         print("The student has been added.")
