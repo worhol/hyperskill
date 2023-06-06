@@ -22,31 +22,73 @@ def check_length(word):
 
 
 def statistics():
-    most_popular = "n/a"
-    least_popular = "n/a"
-    highest_activity = "n/a"
-    lowest_activity = "n/a"
-    easiest_course = "n/a"
-    hardest_course = "n/a"
+    if sum(course_counter().values()) == 0:
 
-    print("Most popular:", most_popular)
-    print("Least popular:", least_popular)
-    print("Highest activity:", highest_activity)
-    print("Lowest activity:", lowest_activity)
-    print("Easiest course:", easiest_course)
-    print("Hardest course:", hardest_course)
+        most_popular = "n/a"
+        least_popular = "n/a"
+        highest_activity = "n/a"
+        lowest_activity = "n/a"
+        easiest_course = "n/a"
+        hardest_course = "n/a"
+        print("Most popular:", most_popular)
+        print("Least popular:", least_popular)
+        print("Highest activity:", highest_activity)
+        print("Lowest activity:", lowest_activity)
+        print("Easiest course:", easiest_course)
+        print("Hardest course:", hardest_course)
+    else:
+        # most_popular = max(course_counter(), key=course_counter().get)
+        # least_popular = min(course_counter(), key=course_counter().get)
+        counter_values = course_counter().values()
+        max_value = max(counter_values)
+        min_value = min(counter_values)
+
+        # Find keys associated with the maximum value
+        most_popular = [key for key, value in course_counter().items() if value == max_value]
+        # Find keys associated with the minimum value
+        least_popular = [key for key, value in course_counter().items() if value == min_value]
+        if len(most_popular) == len(least_popular):
+            least_popular = list(set(most_popular) - set(least_popular))
+
+        print("Most popular:", end=" ")
+        for popular in most_popular:
+            if most_popular.index(popular) == len(most_popular) - 1:
+                print(popular)
+            else:
+                print(popular, end=", ")
+        print("Least popular:", end=" ")
+        if len(least_popular) == 0:
+            print("n/a")
+        else:
+            for popular in least_popular:
+                if least_popular.index(popular) == len(least_popular) - 1:
+                    print(popular)
+                else:
+                    print(popular, end=", ")
+        # print("Highest activity:", highest_activity)
+        # print("Lowest activity:", lowest_activity)
+        # print("Easiest course:", easiest_course)
+        # print("Hardest course:", hardest_course)
 
     while True:
         course_input = input()
         if course_input == "back":
             break
-        if course_input in course_counter().keys():
-            print(f"{course_input}")
+        if course_input in course_counter().keys() or course_input.upper() in course_counter().keys() or course_input.capitalize() in course_counter().keys():
+            leaderboard = []
+            print(f"{course_input.capitalize()}")
             print(f"id{'':<10}points{'':<5}completed")
             for stu in all_students:
                 if stu[course_input] > 0:
-                    print(
-                        f"{stu['student id']}{'':<7}{stu[course_input]}{'':<9}{round((stu[course_input] / 600) * 100, 1)}%")
+                    leaderboard.append({'id': stu['student id'], 'points': stu[course_input],
+                                        'completed': round((stu[course_input] / 600) * 100, 1)})
+
+            sorted_leaderboard = sorted(leaderboard, key=lambda x: (-x['points'], x['id']))
+
+            for leader in sorted_leaderboard:
+                print(f"{leader['id']}{'':<7}{leader['points']}{'':<9}{leader['completed']}%")
+        else:
+            print("Unknown course.")
 
 
 def course_counter():
